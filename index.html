@@ -8,13 +8,23 @@
     <title>20 Жилийн Ойн Урилга - Үүрийн Шүүдэр</title>
     <meta name="title" content="20 ЖИЛ - СЭЛЭНГЭ-ҮҮРИЙН ШҮҮДЭР">
     <meta name="description" content="Эрхэм хүндэт таныг Сэлэнгэ-Үүрийн Шүүдэр чуулганы 20 жилийн ойн баярт хүрэлцэн ирэхийг урьж байна. 2026.06.21-нд уулзацгаая.">
+    <meta name="image" content="https://img.youtube.com/vi/Um9Djsv5nK4/hqdefault.jpg">
 
-    <!-- Open Graph / Messenger, Facebook, Viber, Telegram дээр харагдах байдал -->
+    <!-- Open Graph / Messenger, Facebook, Viber дээр харагдах байдал -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://selenge-church-gjr3qe19v-bayarkhuub005-5893s-projects.vercel.app">
+    <meta property="og:url" content="https://selenge-church-nine.vercel.app/">
     <meta property="og:title" content="20 ЖИЛ - СЭЛЭНГЭ-ҮҮРИЙН ШҮҮДЭР">
     <meta property="og:description" content="Эрхэм хүндэт таныг 20 жилийн ойн баярт хүрэлцэн ирэхийг урьж байна. Цахим урилгыг эндээс үзнэ үү.">
-    <meta property="og:image" content="https://img.youtube.com/vi/Um9Djsv5nK4/maxresdefault.jpg">
+    <meta property="og:image" content="https://img.youtube.com/vi/Um9Djsv5nK4/hqdefault.jpg">
+    <meta property="og:image:width" content="480">
+    <meta property="og:image:height" content="360">
+
+    <!-- Twitter / Telegram дээр харагдах байдал -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://selenge-church-nine.vercel.app/">
+    <meta property="twitter:title" content="20 ЖИЛ - СЭЛЭНГЭ-ҮҮРИЙН ШҮҮДЭР">
+    <meta property="twitter:description" content="Эрхэм хүндэт таныг 20 жилийн ойн баярт хүрэлцэн ирэхийг урьж байна. Цахим урилгыг эндээс үзнэ үү.">
+    <meta property="twitter:image" content="https://img.youtube.com/vi/Um9Djsv5nK4/hqdefault.jpg">
     
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Montserrat:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
     
@@ -88,13 +98,12 @@
             z-index: 5; pointer-events: none; font-family: 'Cinzel', serif;
         }
         
-        /* Дээд талын текст - ШИНЭЧЛЭГДСЭН (Дээшлүүлсэн, Болд, Шинэ эффект) */
+        /* Дээд талын текст */
         .text-top {
-            top: 11%; /* Үл ялиг дээшлүүлсэн (хуучин 15% байсан) */
+            top: 11%;
             font-size: 0.95rem; letter-spacing: 5px; 
-            font-weight: 700; /* Bold болгосон */
+            font-weight: 700;
             text-transform: uppercase;
-            /* Доод бичигтэй адилхан гэрэлтэх эффект */
             background: linear-gradient(120deg, #b38728 0%, #fcf6ba 15%, #d4af37 30%, #aa771c 100%);
             background-size: 300% auto;
             -webkit-background-clip: text;
@@ -326,7 +335,6 @@
                     'disablekb': 1,
                     'iv_load_policy': 3,
                     'fs': 0,
-                    // 'vq': 'hd1080' // Энэ нь заримдаа ажилладаггүй тул JS-ээр хүчилнэ
                 },
                 events: {
                     'onStateChange': onPlayerStateChange
@@ -336,7 +344,6 @@
 
         function startInvitation() {
             if(player && typeof player.playVideo === 'function') {
-                // Эхлээд mute хийж тоглуулна (Autoplay policy давах)
                 player.mute(); 
                 player.playVideo();
             }
@@ -349,15 +356,11 @@
         }
 
         function onPlayerStateChange(event) {
-            // Бичлэг тоглож эхлэх үед (PLAYING)
             if (event.data == YT.PlayerState.PLAYING) {
-                
-                // ШИНЭ: Программаар өндөр нягтралыг шаардах
                 if (player && typeof player.setPlaybackQuality === 'function') {
-                    player.setPlaybackQuality('hd1080'); // Эсвэл 'highres'
+                    player.setPlaybackQuality('hd1080'); 
                 }
 
-                // Дууг нь нээх
                 if (player && typeof player.unMute === 'function') {
                     player.unMute();
                 }
