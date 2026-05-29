@@ -63,7 +63,10 @@
 
         /* 3. ВИДЕО ХЭСЭГ */
         #mainContent { 
-            display: none; width: 100%; height: 100vh; position: relative; background: #050300; overflow: hidden;
+            position: absolute; top: 0; left: 0; /* Splash-н ард шууд layered байдлаар ачааллана */
+            width: 100%; height: 100vh; 
+            background: #050300; overflow: hidden;
+            z-index: 1; 
         }
 
         /* Үл үзэгдэх хамгаалалт - Youtube лого болон цэс гаргахгүй байх */
@@ -79,7 +82,7 @@
         
         /* Дээд талын текст - Зөөлөн лугших гэрэлтэй */
         .text-top {
-            top: 15%; /* Бага зэрэг доошлуулсан */
+            top: 15%; /* Доошлуулсан */
             font-size: 0.95rem; letter-spacing: 5px; color: #d4af37; text-transform: uppercase;
             animation: textPulseGlow 4s infinite alternate ease-in-out;
         }
@@ -90,11 +93,10 @@
 
         /* Доод талын текст - Гэрэл гүйж өнгөрөх эффект */
         .text-bottom {
-            bottom: 22%; /* Бага зэрэг дээшлүүлсэн */
+            bottom: 22%; /* Дээшлүүлсэн */
             font-size: 2.2rem; /* Жижигрүүлсэн */
             letter-spacing: 8px; font-weight: 700; text-transform: uppercase;
             
-            /* Алтлаг өнгөн дээгүүр цагаан гэрэл гүйх тохиргоо */
             background: linear-gradient(120deg, #b38728 0%, #fcf6ba 15%, #d4af37 30%, #aa771c 100%);
             background-size: 300% auto;
             -webkit-background-clip: text;
@@ -162,7 +164,7 @@
         }
         .donate-btn:hover { opacity: 1; background: rgba(252, 246, 186, 0.1); }
 
-        /* ХАНДИВЫН МЭДЭЭЛЭЛ - Илүү гоёмсог минималист Premium загвар */
+        /* ХАНДИВЫН МЭДЭЭЛЭЛ - Premium Card загвар */
         #donateInfo {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(10, 10, 10, 0.98); display: none; flex-direction: column; justify-content: center; align-items: center;
@@ -176,7 +178,6 @@
             position: relative;
         }
         
-        /* Дотоод нарийхан тасархай хүрээ */
         .donate-inner-card::before {
             content: ''; position: absolute; top: 10px; left: 10px; right: 10px; bottom: 10px;
             border: 1px dashed rgba(212, 175, 55, 0.2); pointer-events: none;
@@ -205,6 +206,7 @@
     <div id="bgMain"><div class="dot-pattern"></div></div>
     <canvas id="canvas-snow"></canvas>
 
+    <!-- 1. SPLASH SCREEN -->
     <div id="splash">
         <div class="content-wrapper">
             <h1 class="title">20 ЖИЛ</h1>
@@ -215,8 +217,10 @@
         </div>
     </div>
 
+    <!-- Арын ая -->
     <audio id="bgMusic" src="music.mp3" loop></audio>
 
+    <!-- 2. ВИДЕО ХЭСЭГ -->
     <div id="mainContent">
         <div class="video-overlay-text text-top">Сэлэнгэ-Үүрийн Шүүдэр</div>
         <div class="video-overlay-text text-bottom">20 ЖИЛ</div>
@@ -227,6 +231,7 @@
         </div>
     </div>
 
+    <!-- 3. ТӨГСГӨЛИЙН КАРТ -->
     <div id="inviteCard">
         <div class="table-modal">
             
@@ -256,6 +261,7 @@
                 </div>
             </div>
 
+            <!-- МИНИМАЛИСТ ХАНДИВЫН ЦОНХ -->
             <div id="donateInfo">
                 <div class="donate-inner-card">
                     <div class="card-title" style="margin-bottom: 0;">Хандивын данс</div>
@@ -319,20 +325,28 @@
         }
 
         function startInvitation() {
+            // Хамгийн чухал нь: Видеог амжилттай эхлүүлэх тушаалыг дахиад issue хийх.
             if(player && typeof player.playVideo === 'function') {
                 player.playVideo();
+                // Заримдаа хөтөч тоглохгүй байвал бид автомат дуу хааж (muted) үзнэ.
+                player.mute(); 
+                player.playVideo();
+                // Тоглогчийн төлөв 'тоглож байна' болох үед дууг нээх тушаалыг onPlayerStateChange-д өгнө.
             }
             
             const splash = document.getElementById('splash');
             splash.style.opacity = '0';
             setTimeout(() => {
                 splash.style.display = 'none';
-                document.getElementById('mainContent').style.display = 'block';
             }, 800);
         }
 
         function onPlayerStateChange(event) {
+            // Видео амжилттай тоглож эхэлмэгц (PLAYING), автомат дуу хаахыг унтраах (unmute)
             if (event.data == YT.PlayerState.PLAYING) {
+                if (player && typeof player.unMute === 'function') {
+                    player.unMute();
+                }
                 bgMusic.pause();
                 startCheckingTime();
             } else {
@@ -365,4 +379,31 @@
         }
 
         function showDonate() {
-            donateInfo.style.display =
+            donateInfo.style.display = 'flex';
+        }
+        function hideDonate() {
+            donateInfo.style.display = 'none';
+        }
+
+        const canvas = document.getElementById('canvas-snow');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        window.addEventListener('resize', resize); resize();
+        class Snowflake {
+            constructor() { this.reset(); }
+            reset() {
+                this.x = Math.random() * canvas.width; this.y = -10;
+                this.size = Math.random() * 1.5 + 0.5;
+                this.speed = Math.random() * 0.4 + 0.2;
+                this.opacity = Math.random() * 0.6;
+            }
+            update() { this.y += this.speed; if (this.y > canvas.height) this.reset(); }
+            draw() { ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill(); }
+        }
+        for (let i = 0; i < 60; i++) particles.push(new Snowflake());
+        function animate() { ctx.clearRect(0, 0, canvas.width, canvas.height); particles.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(animate); }
+        animate();
+    </script>
+</body>
+</html>
