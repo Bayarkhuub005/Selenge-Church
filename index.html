@@ -4,95 +4,206 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>20 Жилийн Ойн Урилга - Үүрийн Шүүдэр</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Montserrat:wght@200;400;600&display=swap" rel="stylesheet">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Montserrat:wght@200;400;600;800&display=swap" rel="stylesheet">
+    
     <style>
         :root {
-            --gold: #d4af37;
-            --navy: #0a192f;
-            --border: rgba(212, 175, 55, 0.3);
+            --gold: linear-gradient(45deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+            --gold-static: #d4af37;
         }
 
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; font-family: 'Montserrat', sans-serif; background: #000; overflow: hidden; color: white; }
 
-        #bgMain { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; background: radial-gradient(circle at center, #16213e 0%, #050a14 100%); }
-        #aura { position: absolute; width: 150vw; height: 150vw; top: -25%; left: -25%; background: radial-gradient(circle, rgba(212, 175, 55, 0.08) 0%, transparent 60%); animation: rotateAura 25s infinite linear; z-index: -1; }
-        @keyframes rotateAura { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        /* 1. АРЫН ФОН */
+        #bgMain { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%); }
+        .dot-pattern { position: absolute; width: 100%; height: 100%; background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px); background-size: 25px 25px; opacity: 0.5; }
 
-        #splash { 
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
-            background: var(--navy); z-index: 9999; display: flex; flex-direction: column; 
-            justify-content: center; align-items: center; text-align: center; transition: 1s ease; 
+        /* 2. ЭХЛЭХ НҮҮР (SPLASH) */
+        #splash {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            z-index: 5000; text-align: center; transition: 0.8s ease;
         }
-        
-        .anniversary-text { font-family: 'Cinzel', serif; color: var(--gold); font-size: 2.2rem; letter-spacing: 5px; font-weight: 900; }
-        .sub-title { font-size: 0.8rem; letter-spacing: 3px; opacity: 0.6; margin-top: 10px; text-transform: uppercase; }
 
-        #mainContent { display: none; width: 100%; height: 100vh; position: relative; background: #000; }
-        #player { width: 100%; height: 100%; }
+        .content-wrapper {
+            display: flex; flex-direction: column; align-items: center;
+            animation: fadeInUp 1.5s ease-out;
+            padding: 40px; 
+            box-sizing: border-box;
+            position: relative;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+        }
 
+        .content-wrapper::before {
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: conic-gradient(transparent, rgba(252, 246, 186, 0.1), transparent 30%);
+            animation: rotateGlow 6s linear infinite; z-index: -1;
+        }
+
+        @keyframes rotateGlow { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        .title {
+            font-family: 'Cinzel', serif; font-size: 3.2rem; margin: 0; letter-spacing: 6px; font-weight: 700;
+            background: var(--gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.3));
+        }
+
+        .subtitle { font-family: 'Cinzel', serif; font-size: 0.9rem; letter-spacing: 4px; margin: 15px 0; color: #fff; opacity: 0.8; text-transform: uppercase; }
+
+        .divider { width: 120px; height: 1px; background: var(--gold); margin: 20px 0; position: relative; }
+        .divider::after { content: '✦'; position: absolute; top: -10px; left: 50%; transform: translateX(-50%); color: #fcf6ba; font-size: 10px; }
+
+        .date-time { font-size: 1rem; font-weight: 200; letter-spacing: 2px; margin-bottom: 25px; color: #fcf6ba; }
+
+        .gold-button {
+            padding: 16px 45px; font-size: 0.85rem; background: var(--gold); color: #000;
+            border: none; cursor: pointer; box-shadow: 0 5px 20px rgba(212, 175, 55, 0.4);
+            transition: 0.4s; font-weight: 700; text-transform: uppercase; letter-spacing: 2px;
+        }
+
+        /* 3. ВИДЕО ХЭСЭГ (Blur дэвсгэр болон байрлал) */
+        #mainContent { 
+            display: none; width: 100%; height: 100vh; position: relative; background: #000; 
+            /* Видеоны зургийг дэвсгэр болгох */
+            background: url('https://img.youtube.com/vi/Um9Djsv5nK4/hqdefault.jpg') center center / cover no-repeat;
+        }
+        /* Blur буюу бүдгэрүүлэх эффект */
+        #mainContent::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            background: rgba(0, 0, 0, 0.65); z-index: 1;
+        }
+        .video-container { 
+            width: 100%; height: 100%; overflow: hidden; display: flex; align-items: center; justify-content: center; 
+            position: relative; z-index: 2;
+            /* Видеог бага зэрэг дээш нь өргөх */
+            transform: translateY(-8%);
+        }
+        #player { width: 100%; height: 100%; object-fit: contain; }
+
+        /* 4. ТӨГСГӨЛИЙН КАРТ */
         #inviteCard {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(10, 25, 47, 0.9); backdrop-filter: blur(15px);
-            z-index: 200; display: none; flex-direction: column; align-items: center; 
-            justify-content: center; text-align: center; padding: 30px; box-sizing: border-box;
-            animation: cardFade 1.2s ease;
+            display: none; flex-direction: column; justify-content: center; align-items: center;
+            background: rgba(0,0,0,0.92); z-index: 4000; backdrop-filter: blur(10px);
+            animation: cardFadeIn 1.2s ease;
         }
-        @keyframes cardFade { from { opacity: 0; } to { opacity: 1; } }
 
-        .card-frame {
-            border: 1px solid var(--border); padding: 50px 25px; position: relative;
-            max-width: 380px; background: rgba(255,255,255,0.02);
+        @keyframes cardFadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .table-modal {
+            background: #0a0a0a; padding: 30px 25px 20px 25px; text-align: center;
+            width: 80%; max-width: 320px; box-shadow: 0 0 40px rgba(212, 175, 55, 0.2);
+            border: 1px solid #bf953f; position: relative;
         }
-        .card-frame::before { content: '✦'; position: absolute; top: -12px; left: 50%; transform: translateX(-50%); color: var(--gold); background: var(--navy); padding: 0 15px; }
 
-        .title-gold { font-family: 'Cinzel', serif; color: var(--gold); font-size: 2rem; margin: 0; letter-spacing: 2px; }
-        .info-row { margin: 30px 0; font-size: 1rem; line-height: 1.8; font-weight: 300; }
-        .info-row b { color: var(--gold); display: block; font-family: 'Cinzel'; letter-spacing: 2px; margin-bottom: 5px; }
+        .modal-inner-border { border: 1px solid #444; padding: 25px 15px 15px 15px; }
 
-        .btn-gold { background: transparent; border: 1px solid var(--gold); color: var(--gold); padding: 14px 35px; font-family: 'Cinzel'; cursor: pointer; transition: 0.3s; margin-top: 20px; letter-spacing: 2px; font-weight: bold; font-size: 1rem; }
-        .btn-gold:hover { background: var(--gold); color: #000; }
+        .card-title { font-family: 'Cinzel'; font-size: 0.8rem; color: #d4af37; letter-spacing: 3px; margin-bottom: 15px; text-transform: uppercase; }
+        .info-row { font-size: 0.9rem; color: #fff; margin: 15px 0; font-weight: 300; line-height: 1.6; opacity: 0.9; }
+        .info-row b { color: #d4af37; display: block; margin-bottom: 5px; letter-spacing: 1px; }
 
-        #canvas-snow { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 250; pointer-events: none; opacity: 0.4; }
+        /* Товчлууруудын хэсэг */
+        .action-buttons {
+            display: flex; flex-direction: column; align-items: center; gap: 12px; margin-top: 20px;
+        }
+
+        .replay-btn {
+            background: transparent; color: #d4af37; padding: 10px 35px; border: 1px solid #d4af37;
+            cursor: pointer; letter-spacing: 1px; font-size: 0.75rem; font-weight: 600;
+            text-transform: uppercase; transition: 0.3s; width: auto; /* Богиносгосон */
+        }
+        .replay-btn:hover { background: #d4af37; color: #000; }
+
+        #closeBtn { background: transparent; color: #888; border: none; cursor: pointer; font-size: 0.7rem; text-decoration: underline; }
+        #closeBtn:hover { color: #fff; }
+
+        /* Хандив өргөх товчлуурыг тусгаарласан хэсэг */
+        .donate-section {
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+            width: 100%;
+        }
+
+        .donate-btn {
+            background: transparent; color: #fcf6ba; padding: 8px 25px;
+            border: 1px solid rgba(252, 246, 186, 0.4);
+            cursor: pointer; letter-spacing: 1px; font-size: 0.7rem; font-weight: 400;
+            text-transform: uppercase; transition: 0.3s; display: inline-block; opacity: 0.8;
+        }
+        .donate-btn:hover { opacity: 1; background: rgba(252, 246, 186, 0.1); }
+
+        #canvas-snow { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 200; pointer-events: none; opacity: 0.3; }
     </style>
 </head>
 <body>
 
-    <div id="bgMain"><div id="aura"></div></div>
+    <div id="bgMain"><div class="dot-pattern"></div></div>
     <canvas id="canvas-snow"></canvas>
 
+    <!-- 1. SPLASH SCREEN -->
     <div id="splash">
-        <div class="anniversary-text">20 ЖИЛИЙН ОЙ</div>
-        <div class="sub-title">СЭЛЭНГЭ-ҮҮРИЙН ШҮҮДЭР ЧУУЛГАН</div>
-        <button class="btn-gold" style="margin-top: 50px;" onclick="startInvitation()">УРИЛГА НЭЭХ ✉️</button>
+        <div class="content-wrapper">
+            <h1 class="title">20 ЖИЛ</h1>
+            <div class="subtitle">СЭЛЭНГЭ-ҮҮРИЙН ШҮҮДЭР</div>
+            <div class="divider"></div>
+            <div class="date-time">ОЙН БАЯРЫН УРИЛГА</div>
+            <button class="gold-button" onclick="startInvitation()">ТҮҮХЭН ЗАМНАЛ</button>
+        </div>
     </div>
 
+    <!-- Арын ая -->
     <audio id="bgMusic" src="music.mp3" loop></audio>
 
+    <!-- 2. ВИДЕО ХЭСЭГ (Blur дэвсгэртэй) -->
     <div id="mainContent">
-        <div id="player"></div>
+        <div class="video-container">
+            <div id="player"></div>
+        </div>
     </div>
 
+    <!-- 3. ТӨГСГӨЛИЙН КАРТ -->
     <div id="inviteCard">
-        <div class="card-frame">
-            <h1 class="title-gold">БАЯРЫН УРИЛГА</h1>
-            <p style="font-size: 0.8rem; letter-spacing: 2px; margin-top: 10px; opacity: 0.8;">2005 - 2025</p>
-            <div class="info-row">
-                <b>БАЯРЫН ЦӨГЦӨЛӨӨ:</b>
-                2025 оны 10-р сарын 25 <br> 11:00 Цагт
+        <div class="table-modal">
+            <div class="modal-inner-border">
+                <div class="card-title">Эрхэм хүндэт таныг</div>
+                
+                <div class="info-row">
+                    <b>20 Жилийн Ойн Баярт</b>
+                </div>
+
+                <div class="info-row">
+                    <b>Урьж байна</b>
+                    Сэлэнгэ аймаг, Сүхбаатар хот <br>
+                    2026 оны 6-р сарын 21 <br> 11:00 Цагт
+                </div>
+
+                <div class="action-buttons">
+                    <button class="replay-btn" onclick="location.reload()">Дахин үзэх</button>
+                    <button id="closeBtn" onclick="closeApp()">ХААХ</button>
+                </div>
+
+                <!-- Хандив өргөх хэсгийг хамгийн доор тусад нь салгав -->
+                <div class="donate-section">
+                    <button class="donate-btn">Хандив өргөх</button>
+                </div>
             </div>
-            <div class="info-row">
-                <b>БАЙРШИЛ:</b>
-                Сэлэнгэ аймаг, Сүхбаатар хот, <br> Чуулганы баярын танхимд
-            </div>
-            <button class="btn-gold" style="font-size: 0.8rem;" onclick="location.reload()">ДАХИН ҮЗЭХ</button>
         </div>
-        <p style="font-size: 0.6rem; margin-top: 40px; opacity: 0.4; letter-spacing: 3px;">СЭЛЭНГЭ-ҮҮРИЙН ШҮҮДЭР ЧУУЛГАН</p>
+        <p style="font-size: 0.55rem; margin-top: 30px; opacity: 0.4; letter-spacing: 2px;">СЭЛЭНГЭ-ҮҮРИЙН ШҮҮДЭР ЧУУЛГАН | 2006-2026</p>
     </div>
 
     <script src="https://www.youtube.com/iframe_api"></script>
 
     <script>
         let player;
+        let checkTimer;
         const bgMusic = document.getElementById('bgMusic');
         const inviteCard = document.getElementById('inviteCard');
 
@@ -100,13 +211,14 @@
             player = new YT.Player('player', {
                 height: '100%',
                 width: '100%',
-                videoId: '8mP5xOg7ics', 
+                videoId: 'Um9Djsv5nK4', 
                 playerVars: {
                     'autoplay': 0,
-                    'controls': 1,
+                    'controls': 0,
                     'rel': 0,
                     'modestbranding': 1,
-                    'playsinline': 1
+                    'playsinline': 1,
+                    'vq': 'hd720'
                 },
                 events: {
                     'onStateChange': onPlayerStateChange
@@ -118,37 +230,46 @@
             document.getElementById('splash').style.opacity = '0';
             setTimeout(() => {
                 document.getElementById('splash').style.display = 'none';
-                document.getElementById('mainContent').style.display = 'flex';
-                
-                // Бичлэг эхлэх хүртэл арын аяыг аяархан явуулж болно
-                bgMusic.volume = 0.2;
-                bgMusic.play();
-                
-                player.playVideo();
+                document.getElementById('mainContent').style.display = 'block';
+                if(player && player.playVideo) {
+                    player.playVideo();
+                }
             }, 800);
         }
 
         function onPlayerStateChange(event) {
-            // Бичлэг тоглож эхлэх үед (PLAYING)
             if (event.data == YT.PlayerState.PLAYING) {
-                bgMusic.pause(); // Арын аяыг зогсооно
-            } 
-            // Бичлэг дуусах үед (ENDED)
-            else if (event.data == YT.PlayerState.ENDED) {
-                inviteCard.style.display = 'flex';
-                bgMusic.volume = 0.4;
-                bgMusic.play(); // Арын аяыг тоглуулна
-            }
-            // Бичлэгийг түр зогсоох үед (PAUSED)
-            else if (event.data == YT.PlayerState.PAUSED) {
-                bgMusic.pause(); // Арын ая явахгүй, чимээгүй байна
-            }
-            // Бичлэг ачаалж байх үед (BUFFERING)
-            else if (event.data == YT.PlayerState.BUFFERING) {
                 bgMusic.pause();
+                startCheckingTime();
+            } else {
+                stopCheckingTime();
             }
         }
 
+        function startCheckingTime() {
+            checkTimer = setInterval(() => {
+                let duration = player.getDuration();
+                let currentTime = player.getCurrentTime();
+                if (duration > 0 && (duration - currentTime <= 5)) {
+                    showFinalCard();
+                    clearInterval(checkTimer);
+                }
+            }, 500);
+        }
+
+        function stopCheckingTime() { clearInterval(checkTimer); }
+
+        function showFinalCard() {
+            inviteCard.style.display = 'flex';
+            bgMusic.volume = 0.4;
+            bgMusic.play();
+        }
+
+        function closeApp() {
+            document.body.innerHTML = `<div style="background:#000; height:100vh; display:flex; justify-content:center; align-items:center; font-family:'Cinzel'; color:#d4af37;">БАЯРЛАЛАА</div>`;
+        }
+
+        // Snow Animation
         const canvas = document.getElementById('canvas-snow');
         const ctx = canvas.getContext('2d');
         let particles = [];
@@ -156,11 +277,16 @@
         window.addEventListener('resize', resize); resize();
         class Snowflake {
             constructor() { this.reset(); }
-            reset() { this.x = Math.random() * canvas.width; this.y = -10; this.size = Math.random() * 1.5 + 0.5; this.speed = Math.random() * 0.4 + 0.2; this.opacity = Math.random() * 0.4; }
+            reset() {
+                this.x = Math.random() * canvas.width; this.y = -10;
+                this.size = Math.random() * 1.5 + 0.5;
+                this.speed = Math.random() * 0.4 + 0.2;
+                this.opacity = Math.random() * 0.4;
+            }
             update() { this.y += this.speed; if (this.y > canvas.height) this.reset(); }
-            draw() { ctx.fillStyle = `rgba(212, 175, 55, ${this.opacity})`; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill(); }
+            draw() { ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill(); }
         }
-        for (let i = 0; i < 50; i++) particles.push(new Snowflake());
+        for (let i = 0; i < 60; i++) particles.push(new Snowflake());
         function animate() { ctx.clearRect(0, 0, canvas.width, canvas.height); particles.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(animate); }
         animate();
     </script>
