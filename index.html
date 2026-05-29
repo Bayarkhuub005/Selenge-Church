@@ -67,10 +67,12 @@
             transition: 0.4s; font-weight: 700; text-transform: uppercase; letter-spacing: 2px;
         }
 
-        /* 3. ВИДЕО ХЭСЭГ */
+        /* 3. ВИДЕО ХЭСЭГ - Засагдсан */
         #mainContent { 
-            display: none; width: 100%; height: 100vh; position: relative;
+            position: absolute; top: 0; left: 0; /* Splash-н ард шууд ачааллана */
+            width: 100%; height: 100vh; 
             background: #050300; overflow: hidden;
+            z-index: 1; 
         }
 
         /* Видео дээрх болон доорх гоёмсог бичвэрүүд */
@@ -116,7 +118,6 @@
 
         .card-title { font-family: 'Cinzel'; font-size: 0.8rem; color: #d4af37; letter-spacing: 3px; margin-bottom: 15px; text-transform: uppercase; }
         
-        /* 20 Жилийн Ойн Баярт - Илүү том, тод болгосон */
         .main-event-text {
             font-family: 'Cinzel', serif; font-size: 1.2rem; color: #d4af37;
             letter-spacing: 2px; margin: 25px 0 20px 0; font-weight: 700;
@@ -146,7 +147,7 @@
         }
         .donate-btn:hover { opacity: 1; background: rgba(252, 246, 186, 0.1); }
 
-        /* ХАНДИВЫН МЭДЭЭЛЭЛ - Минималист загвар */
+        /* ХАНДИВЫН МЭДЭЭЛЭЛ */
         #donateInfo {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: #0a0a0a; display: none; flex-direction: column; justify-content: center; align-items: center;
@@ -172,6 +173,7 @@
     <div id="bgMain"><div class="dot-pattern"></div></div>
     <canvas id="canvas-snow"></canvas>
 
+    <!-- 1. SPLASH SCREEN -->
     <div id="splash">
         <div class="content-wrapper">
             <h1 class="title">20 ЖИЛ</h1>
@@ -182,8 +184,10 @@
         </div>
     </div>
 
+    <!-- Арын ая -->
     <audio id="bgMusic" src="music.mp3" loop></audio>
 
+    <!-- 2. ВИДЕО ХЭСЭГ -->
     <div id="mainContent">
         <div class="video-overlay-text text-top">Сэлэнгэ-Үүрийн Шүүдэр</div>
         <div class="video-overlay-text text-bottom">20 ЖИЛ</div>
@@ -193,6 +197,7 @@
         </div>
     </div>
 
+    <!-- 3. ТӨГСГӨЛИЙН КАРТ -->
     <div id="inviteCard">
         <div class="table-modal">
             
@@ -249,3 +254,99 @@
         const bgMusic = document.getElementById('bgMusic');
         const inviteCard = document.getElementById('inviteCard');
         const donateInfo = document.getElementById('donateInfo');
+
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('player', {
+                height: '100%',
+                width: '100%',
+                videoId: 'Um9Djsv5nK4', 
+                playerVars: {
+                    'autoplay': 0,
+                    'controls': 0,
+                    'rel': 0,
+                    'modestbranding': 1,
+                    'playsinline': 1,
+                    'vq': 'hd720'
+                },
+                events: {
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+        }
+
+        function startInvitation() {
+            // 1. Бичлэгийг шууд эхлүүлэх (Гар утасны хамгаалалтыг давах)
+            if(player && typeof player.playVideo === 'function') {
+                player.playVideo();
+            }
+            
+            // 2. Дэлгэцийг алга болгох
+            const splash = document.getElementById('splash');
+            splash.style.opacity = '0';
+            setTimeout(() => {
+                splash.style.display = 'none';
+            }, 800);
+        }
+
+        function onPlayerStateChange(event) {
+            if (event.data == YT.PlayerState.PLAYING) {
+                bgMusic.pause();
+                startCheckingTime();
+            } else {
+                stopCheckingTime();
+            }
+        }
+
+        function startCheckingTime() {
+            checkTimer = setInterval(() => {
+                let duration = player.getDuration();
+                let currentTime = player.getCurrentTime();
+                if (duration > 0 && (duration - currentTime <= 5)) {
+                    showFinalCard();
+                    clearInterval(checkTimer);
+                }
+            }, 500);
+        }
+
+        function stopCheckingTime() { clearInterval(checkTimer); }
+
+        function showFinalCard() {
+            inviteCard.style.display = 'flex';
+            bgMusic.volume = 0.4;
+            bgMusic.play();
+        }
+
+        function closeApp() {
+            document.body.innerHTML = '';
+            window.close();
+        }
+
+        function showDonate() {
+            donateInfo.style.display = 'flex';
+        }
+        function hideDonate() {
+            donateInfo.style.display = 'none';
+        }
+
+        const canvas = document.getElementById('canvas-snow');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        window.addEventListener('resize', resize); resize();
+        class Snowflake {
+            constructor() { this.reset(); }
+            reset() {
+                this.x = Math.random() * canvas.width; this.y = -10;
+                this.size = Math.random() * 1.5 + 0.5;
+                this.speed = Math.random() * 0.4 + 0.2;
+                this.opacity = Math.random() * 0.6;
+            }
+            update() { this.y += this.speed; if (this.y > canvas.height) this.reset(); }
+            draw() { ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill(); }
+        }
+        for (let i = 0; i < 60; i++) particles.push(new Snowflake());
+        function animate() { ctx.clearRect(0, 0, canvas.width, canvas.height); particles.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(animate); }
+        animate();
+    </script>
+</body>
+</html>
