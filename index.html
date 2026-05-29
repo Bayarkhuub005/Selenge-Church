@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>20 Жилийн Ойн Урилга - Үүрийн Шүүдэр</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Montserrat:wght@200;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Montserrat:wght@200;300;400;600;800&display=swap" rel="stylesheet">
     
     <style>
         :root {
@@ -67,14 +67,27 @@
             transition: 0.4s; font-weight: 700; text-transform: uppercase; letter-spacing: 2px;
         }
 
-        /* 3. ВИДЕО ХЭСЭГ (Статик бараан дэвсгэр) */
+        /* 3. ВИДЕО ХЭСЭГ */
         #mainContent { 
             display: none; width: 100%; height: 100vh; position: relative;
-            background: #050300; /* Статик бараан фон */
-            overflow: hidden;
+            background: #050300; overflow: hidden;
         }
-        
-        /* Хуучин хөдөлгөөнт туяаны эффектийг авч хаяв */
+
+        /* Видео дээрх болон доорх гоёмсог бичвэрүүд */
+        .video-overlay-text {
+            position: absolute; left: 0; width: 100%; text-align: center;
+            z-index: 5; pointer-events: none; /* Даралт видеонд очихыг зөвшөөрнө */
+            font-family: 'Cinzel', serif;
+        }
+        .text-top {
+            top: 10%; font-size: 0.95rem; letter-spacing: 5px;
+            color: #d4af37; opacity: 0.85; text-transform: uppercase;
+        }
+        .text-bottom {
+            bottom: 18%; font-size: 2.8rem; letter-spacing: 8px; font-weight: 700;
+            background: var(--gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.2));
+        }
 
         .video-container { 
             width: 100%; height: 100%; overflow: hidden; display: flex; align-items: center; justify-content: center; 
@@ -102,9 +115,16 @@
         .modal-inner-border { border: 1px solid #444; padding: 25px 15px 15px 15px; position: relative; }
 
         .card-title { font-family: 'Cinzel'; font-size: 0.8rem; color: #d4af37; letter-spacing: 3px; margin-bottom: 15px; text-transform: uppercase; }
+        
+        /* 20 Жилийн Ойн Баярт - Илүү том, тод болгосон */
+        .main-event-text {
+            font-family: 'Cinzel', serif; font-size: 1.2rem; color: #d4af37;
+            letter-spacing: 2px; margin: 25px 0 20px 0; font-weight: 700;
+            text-transform: uppercase; text-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+        }
+
         .info-row { font-size: 0.9rem; color: #fff; margin: 15px 0; font-weight: 300; line-height: 1.6; opacity: 0.9; }
         .info-row b { color: #d4af37; display: block; margin-bottom: 5px; letter-spacing: 1px; }
-
         .location-box { margin-top: 30px; }
 
         .action-buttons { display: flex; flex-direction: column; align-items: center; gap: 12px; margin-top: 20px; }
@@ -119,16 +139,14 @@
         #closeBtn { background: transparent; color: #888; border: none; cursor: pointer; font-size: 0.7rem; text-decoration: underline; }
         #closeBtn:hover { color: #fff; }
 
-        .donate-section {
-            margin-top: 25px; padding-top: 15px; border-top: 1px solid rgba(212, 175, 55, 0.2); width: 100%;
-        }
-
+        .donate-section { margin-top: 25px; padding-top: 15px; border-top: 1px solid rgba(212, 175, 55, 0.2); width: 100%; }
         .donate-btn {
             background: transparent; color: #fcf6ba; padding: 8px 25px; border: 1px solid rgba(252, 246, 186, 0.4);
             cursor: pointer; letter-spacing: 1px; font-size: 0.7rem; font-weight: 400; text-transform: uppercase; transition: 0.3s; display: inline-block; opacity: 0.8;
         }
         .donate-btn:hover { opacity: 1; background: rgba(252, 246, 186, 0.1); }
 
+        /* ХАНДИВЫН МЭДЭЭЛЭЛ - Минималист загвар */
         #donateInfo {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: #0a0a0a; display: none; flex-direction: column; justify-content: center; align-items: center;
@@ -140,11 +158,13 @@
             display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px;
         }
 
-        .bank-info { font-size: 0.85rem; text-align: left; line-height: 1.8; color: #fff; margin-bottom: 20px; }
-        .bank-info b { color: #fcf6ba; }
+        .bank-info-minimal {
+            width: 100%; display: flex; flex-direction: column; gap: 18px; margin-bottom: 25px; font-family: 'Montserrat', sans-serif;
+        }
+        .info-item { display: flex; flex-direction: column; text-align: center; font-size: 1rem; color: #fff; font-weight: 300; letter-spacing: 1px; }
+        .info-item span { font-size: 0.65rem; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 6px; }
 
-        /* Цас/Тоосонцор эффектийг тодруулав */
-        #canvas-snow { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 200; pointer-events: none; opacity: 0.6; /* Тод байдлыг нэмэв (хуучин 0.3) */ }
+        #canvas-snow { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 200; pointer-events: none; opacity: 0.6; }
     </style>
 </head>
 <body>
@@ -152,7 +172,6 @@
     <div id="bgMain"><div class="dot-pattern"></div></div>
     <canvas id="canvas-snow"></canvas>
 
-    <!-- 1. SPLASH SCREEN -->
     <div id="splash">
         <div class="content-wrapper">
             <h1 class="title">20 ЖИЛ</h1>
@@ -163,25 +182,25 @@
         </div>
     </div>
 
-    <!-- Арын ая -->
     <audio id="bgMusic" src="music.mp3" loop></audio>
 
-    <!-- 2. ВИДЕО ХЭСЭГ (Статик дэвсгэр) -->
     <div id="mainContent">
+        <div class="video-overlay-text text-top">Сэлэнгэ-Үүрийн Шүүдэр</div>
+        <div class="video-overlay-text text-bottom">20 ЖИЛ</div>
+
         <div class="video-container">
             <div id="player"></div>
         </div>
     </div>
 
-    <!-- 3. ТӨГСГӨЛИЙН КАРТ -->
     <div id="inviteCard">
         <div class="table-modal">
             
             <div class="modal-inner-border">
                 <div class="card-title">Эрхэм хүндэт таныг</div>
                 
-                <div class="info-row">
-                    <b>20 Жилийн Ойн Баярт</b>
+                <div class="main-event-text">
+                    20 Жилийн Ойн Баярт
                 </div>
 
                 <div class="info-row">
@@ -205,13 +224,15 @@
 
             <div id="donateInfo">
                 <div class="donate-inner-border">
-                    <div class="card-title">Хандивын данс</div>
-                    <div class="bank-info">
-                        Банк: <b>ХААН БАНК</b><br>
-                        Данс: <b>5000000000</b><br>
-                        Хүлээн авагч: <b>Б. Бат</b><br>
-                        Гүйлгээний утга: <b>Ойн хандив</b>
+                    <div class="card-title" style="margin-bottom: 30px;">Хандивын данс</div>
+                    
+                    <div class="bank-info-minimal">
+                        <div class="info-item"><span>Банк</span>Хаан банк</div>
+                        <div class="info-item"><span>Данс</span>5000 0000 0000</div>
+                        <div class="info-item"><span>Хүлээн авагч</span>Б. Бат</div>
+                        <div class="info-item"><span>Гүйлгээний утга</span>Ойн хандив</div>
                     </div>
+
                     <button class="replay-btn" style="width: 100%; margin-top: 10px;" onclick="hideDonate()">Буцах</button>
                 </div>
             </div>
@@ -228,96 +249,3 @@
         const bgMusic = document.getElementById('bgMusic');
         const inviteCard = document.getElementById('inviteCard');
         const donateInfo = document.getElementById('donateInfo');
-
-        function onYouTubeIframeAPIReady() {
-            player = new YT.Player('player', {
-                height: '100%',
-                width: '100%',
-                videoId: 'Um9Djsv5nK4', 
-                playerVars: {
-                    'autoplay': 0,
-                    'controls': 0,
-                    'rel': 0,
-                    'modestbranding': 1,
-                    'playsinline': 1,
-                    'vq': 'hd720'
-                },
-                events: {
-                    'onStateChange': onPlayerStateChange
-                }
-            });
-        }
-
-        function startInvitation() {
-            document.getElementById('splash').style.opacity = '0';
-            setTimeout(() => {
-                document.getElementById('splash').style.display = 'none';
-                document.getElementById('mainContent').style.display = 'block';
-                if(player && player.playVideo) {
-                    player.playVideo();
-                }
-            }, 800);
-        }
-
-        function onPlayerStateChange(event) {
-            if (event.data == YT.PlayerState.PLAYING) {
-                bgMusic.pause();
-                startCheckingTime();
-            } else {
-                stopCheckingTime();
-            }
-        }
-
-        function startCheckingTime() {
-            checkTimer = setInterval(() => {
-                let duration = player.getDuration();
-                let currentTime = player.getCurrentTime();
-                if (duration > 0 && (duration - currentTime <= 5)) {
-                    showFinalCard();
-                    clearInterval(checkTimer);
-                }
-            }, 500);
-        }
-
-        function stopCheckingTime() { clearInterval(checkTimer); }
-
-        function showFinalCard() {
-            inviteCard.style.display = 'flex';
-            bgMusic.volume = 0.4;
-            bgMusic.play();
-        }
-
-        function closeApp() {
-            document.body.innerHTML = `<div style="background:#000; height:100vh; display:flex; justify-content:center; align-items:center; font-family:'Cinzel'; color:#d4af37;">БАЯРЛАЛАА</div>`;
-        }
-
-        function showDonate() {
-            donateInfo.style.display = 'flex';
-        }
-        function hideDonate() {
-            donateInfo.style.display = 'none';
-        }
-
-        // Snow/Dust Animation logic
-        const canvas = document.getElementById('canvas-snow');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
-        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-        window.addEventListener('resize', resize); resize();
-        class Snowflake {
-            constructor() { this.reset(); }
-            reset() {
-                this.x = Math.random() * canvas.width; this.y = -10;
-                this.size = Math.random() * 1.5 + 0.5;
-                this.speed = Math.random() * 0.4 + 0.2;
-                this.opacity = Math.random() * 0.6; // Тоосонцорын суурь тод байдлыг бага зэрэг нэмэв
-            }
-            update() { this.y += this.speed; if (this.y > canvas.height) this.reset(); }
-            draw() { ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill(); }
-        }
-        for (let i = 0; i < 60; i++) particles.push(new Snowflake());
-        function animate() { ctx.clearRect(0, 0, canvas.width, canvas.height); particles.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(animate); }
-        animate();
-    </script>
-</body>
-</html>
